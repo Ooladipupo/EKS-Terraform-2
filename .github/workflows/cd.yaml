@@ -21,7 +21,7 @@ jobs:
       - name: configure-oidc-aws-credentials
         uses: dflook/configure-oidc-aws-credentials@v1.0.0
         with:
-          role-arn: arn:aws:iam::457082365292:role/Github-action
+          role-arn: arn:aws:iam::457082365292:role/githuoidc
           sts-region: eu-west-2
           audience: sts.amazonaws.com
           export-variables: true
