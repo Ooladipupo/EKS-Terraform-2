@@ -18,12 +18,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Configure AWS credentials using OIDC
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: arn:aws:iam::457082365292:role/Github-action
-          aws-region: eu-west-2
+     # - name: Configure AWS credentials using OIDC
+    #  uses: aws-actions/configure-aws-credentials@v2
+     #   with:
+      #    role-to-assume: arn:aws:iam::457082365292:role/Github-action
+      #   aws-region: eu-west-2
 
       - name: Run AWS CLI command
         run: aws sts get-caller-identity
 
+      - name: configure-oidc-aws-credentials
+        uses: dflook/configure-oidc-aws-credentials@v1.0.0
+        with:
+          role-arn: arn:aws:iam::457082365292:role/Github-action
+          sts-region: eu-west-2
+          audience: sts.amazonaws.com
+          export-variables: true
+          
