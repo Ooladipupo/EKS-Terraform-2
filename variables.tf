@@ -4,5 +4,9 @@ variable "ssh_key_name" {
   default     = "july2025"
 }
 
-variable "user_for_dev_role" {}
-variable "user_for_admin_role" {}
+variable "user_for_dev_role" {
+  default = "arn:aws:iam::457082365292:user/k8s-developer"
+}
+variable "user_for_admin_role" {
+  default = "arn:aws:iam::457082365292:user/k8s-admin"
+}

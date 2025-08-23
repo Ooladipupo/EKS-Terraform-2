@@ -1,21 +1,32 @@
+<<<<<<< HEAD
 #testing
 
 name: Deploy to AWS
+=======
+name: Terraform AWS Provisioning
+>>>>>>> 6466731 (modified tf files for Github action deployment)
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      destroy:
+        description: 'Set to true to destroy resources'
+        required: false
+        default: 'false'
 
 permissions:
   id-token: write
   contents: read
 
 jobs:
-  deploy:
+  terraform:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout repository
         uses: actions/checkout@v3
         
       - name: Configure AWS credentials using OIDC
@@ -24,8 +35,26 @@ jobs:
          role-to-assume: arn:aws:iam::457082365292:role/githuoidc
          aws-region: eu-west-2
 
-      - name: Run AWS CLI command
-        run: aws sts get-caller-identity
+      - name: 🧰 Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.0
 
+<<<<<<< HEAD
 
           
+=======
+      - name: ⚙️ Terraform Init
+        run: terraform init
+
+      - name: 📊 Terraform Plan
+        run: terraform plan -input=false -out=tfplan
+
+     # - name: 🚀 Terraform Apply (main branch only)
+     #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+     #   run: terraform apply -auto-approve tfplan
+
+    #  - name: 💣 Terraform Destroy (manual trigger)
+     #   if: github.event_name == 'workflow_dispatch' && github.event.inputs.destroy == 'true'
+    #    run: terraform destroy -auto-approve
+>>>>>>> 6466731 (modified tf files for Github action deployment)
