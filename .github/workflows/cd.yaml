@@ -44,7 +44,7 @@ jobs:
 
       - name: 🚀 Terraform Apply (main branch only)
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform destroy -auto-approve tfplan
+        run: terraform destroy -auto-approve
         
 
 #      - name: 💣 Terraform Destroy (manual trigger)
