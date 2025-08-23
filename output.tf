@@ -7,7 +7,7 @@ output "cluster_endpoint" {
 }
 
 output "cluster_name" {
-  value = aws_eks_cluster.devopsshack.name
+  value = aws_eks_cluster.devopsshack.id
 }
 
 
