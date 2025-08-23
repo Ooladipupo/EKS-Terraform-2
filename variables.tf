@@ -12,5 +12,5 @@ variable "user_for_admin_role" {
 }
 
 variable "cluster_name" {
-  default = output.cluster_name
+  default = aws_eks_cluster.devopsshack.name
 }
