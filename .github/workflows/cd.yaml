@@ -1,10 +1,4 @@
-HEAD
-#testing
-
-name: Deploy to AWS
-=======
 name: Terraform AWS Provisioning
->>>>>>> 6466731 (modified tf files for Github action deployment)
 
 on:
   push:
@@ -40,10 +34,6 @@ jobs:
         with:
           terraform_version: 1.6.0
 
-<<<<<<< HEAD
-
-          
-=======
       - name: ⚙️ Terraform Init
         run: terraform init
 
@@ -57,4 +47,4 @@ jobs:
     #  - name: 💣 Terraform Destroy (manual trigger)
      #   if: github.event_name == 'workflow_dispatch' && github.event.inputs.destroy == 'true'
     #    run: terraform destroy -auto-approve
->>>>>>> 6466731 (modified tf files for Github action deployment)
+
