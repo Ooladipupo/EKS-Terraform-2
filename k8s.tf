@@ -26,12 +26,12 @@ provider "kubernetes" {
 }
 
 data "aws_eks_cluster" "devopsshack" {
-  name     = "devopsshack-cluster2"
+  name     = var.cluster_name
 }
 
 data "aws_eks_cluster_auth" "devopsshack" {
   #name = data.aws_eks_cluster.devopsshack.name
-  name     = "devopsshack-cluster2"
+  name     = var.cluster_name
 }
 
 

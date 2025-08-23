@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
+  create-cluster:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,10 +35,12 @@ jobs:
           terraform_version: 1.6.0
 
       - name: ⚙️ Terraform Init
-        run: terraform init
+        run: |
+          terraform init
+          terraform plan
 
-      - name: 📊 Terraform Plan
-        run: terraform plan -input=false -out=tfplan
+     # - name: 📊 Terraform Plan
+     #   run: terraform plan -input=false -out=tfplan
 
      # - name: 🚀 Terraform Apply (main branch only)
      #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -48,3 +50,19 @@ jobs:
      #   if: github.event_name == 'workflow_dispatch' && github.event.inputs.destroy == 'true'
     #    run: terraform destroy -auto-approve
 
+
+  jobs:
+    configure-k8s:
+      needs: create-cluster
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v2
+
+        - name: Terraform Init & Apply
+          run: |
+            terraform init
+            terraform apply -auto-approve

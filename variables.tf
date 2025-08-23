@@ -10,3 +10,7 @@ variable "user_for_dev_role" {
 variable "user_for_admin_role" {
   default = "arn:aws:iam::457082365292:user/k8s-admin"
 }
+
+variable "cluster_name" {
+  default = output.cluster_name
+}

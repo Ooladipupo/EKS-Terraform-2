@@ -2,6 +2,15 @@ output "cluster_id" {
   value = aws_eks_cluster.devopsshack.id
 }
 
+output "cluster_endpoint" {
+  value = aws_eks_cluster.devopsshack.endpoint
+}
+
+output "cluster_name" {
+  value = aws_eks_cluster.devopsshack.name
+}
+
+
 output "node_group_id" {
   value = aws_eks_node_group.devopsshack.id
 }
