@@ -8,7 +8,7 @@ on:
     inputs:
       destroy:
         description: 'Set to true to destroy resources'
-        required: false
+        required: true
         default: 'false'
 
 permissions:
