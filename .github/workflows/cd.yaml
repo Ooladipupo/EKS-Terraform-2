@@ -34,17 +34,18 @@ jobs:
         with:
           terraform_version: 1.6.0
 
-      - name: ⚙️ Terraform Init
-        run: |
-          terraform init
+#      - name: ⚙️ Terraform Init
+#        run: |
+#           terraform init
         
 
-      - name: 📊 Terraform Plan
-        run: terraform plan -input=false -out=tfplan
+#       - name: 📊 Terraform Plan
+#         run: terraform plan -input=false -out=tfplan
 
-      - name: 🚀 Terraform Apply (main branch only)
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve tfplan
+#       - name: 🚀 Terraform Apply (main branch only)
+#         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#         run: terraform apply -auto-approve tfplan
+        
 
       - name: 💣 Terraform Destroy (manual trigger)
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.destroy == 'true'
