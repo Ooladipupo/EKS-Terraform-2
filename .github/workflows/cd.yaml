@@ -51,7 +51,7 @@ jobs:
     #    run: terraform destroy -auto-approve
 
 
-  jobs:
+jobs:
     configure-k8s:
       needs: create-cluster
       runs-on: ubuntu-latest
