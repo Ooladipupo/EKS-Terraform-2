@@ -7,18 +7,18 @@ terraform {
   }
 }
 
-/*
+
 provider "kubernetes" {
   host                   = aws_eks_cluster.devopsshack.endpoint
   cluster_ca_certificate = base64decode(aws_eks_cluster.devopsshack.certificate_authority[0].data)
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"
-    args        = ["eks", "get-token", "--cluster-name", aws_eks_cluster.devopsshack.namekubectl ]
+    args        = ["eks", "get-token", "--cluster-name", aws_eks_cluster.devopsshack.id ]
     command     = "aws"
   }
 }
-*/
 
+/*
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.devopsshack.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.devopsshack.certificate_authority[0].data)
@@ -34,6 +34,7 @@ data "aws_eks_cluster_auth" "devopsshack" {
   name     = aws_eks_cluster.devopsshack.id
 }
 
+*/
 
 resource "kubernetes_namespace_v1" "online-boutique" {
   metadata {
