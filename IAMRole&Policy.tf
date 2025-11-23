@@ -79,5 +79,6 @@ resource "aws_eks_access_entry" "admin" {
 resource "aws_eks_access_entry" "github_oidc" {
   cluster_name = aws_eks_cluster.devopsshack.name
   principal_arn = "arn:aws:iam::457082365292:role/Github-action"
+  kubernetes_groups = ["system:masters"]
   type = "STANDARD"
 }
