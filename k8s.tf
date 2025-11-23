@@ -73,10 +73,16 @@ resource "kubernetes_role_binding" "namespaced-viewer-Bind" {
     kind      = "Role"
     name      = "namespaced-viewer"
   }
-  subject {
-    kind      = "User"
-    name      = "developer"
-    api_group = "rbac.authorization.k8s.io"
+  subjects {
+  kind      = "User"
+  name      = "developer"
+  api_group = "rbac.authorization.k8s.io"
+  }
+
+  subjects {
+  kind      = "User"
+  name      = "Github-action"
+  api_group = "rbac.authorization.k8s.io"
   }
 }
 
@@ -102,9 +108,15 @@ resource "kubernetes_cluster_role_binding" "cluster-viewer-Bind" {
     kind      = "ClusterRole"
     name      = "cluster-viewer"
   }
-  subject {
-    kind      = "User"
-    name      = "admin"
-    api_group = "rbac.authorization.k8s.io"
+  subjects {
+  kind      = "User"
+  name      = "admin"
+  api_group = "rbac.authorization.k8s.io"
+  }
+
+  subjects {
+  kind      = "User"
+  name      = "Github-action"
+  api_group = "rbac.authorization.k8s.io"
   }
 }
