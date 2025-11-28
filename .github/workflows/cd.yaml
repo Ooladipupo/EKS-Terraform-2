@@ -34,6 +34,15 @@ jobs:
         with:
           terraform_version: 1.6.0
 
+       # Install AWS CLI v2
+      - name: Install AWS CLI
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+          aws --version
+
+
       - name: ⚙️ Terraform Init
         run: |
            terraform init
@@ -42,9 +51,9 @@ jobs:
       - name: 📊 Terraform Plan
         run: terraform plan -input=false -out=tfplan
 
-      - name: 🚀 Terraform Apply (main branch only)
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform destroy -auto-approve
+#      - name: 🚀 Terraform Apply (main branch only)
+#        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#        run: terraform destroy -auto-approve
         
 
 #      - name: 💣 Terraform Destroy (manual trigger)
