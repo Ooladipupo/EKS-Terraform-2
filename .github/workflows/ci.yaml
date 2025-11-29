@@ -34,6 +34,18 @@ jobs:
           unzip awscliv2.zip
           sudo ./aws/install --update
           aws --version
+          
+
+        # Get OIDC request token + URL
+      - uses: actions/github-script@v8
+        id: oidc
+        with:
+          script: |
+            const token = process.env['ACTIONS_ID_TOKEN_REQUEST_TOKEN']
+            const url = process.env['ACTIONS_ID_TOKEN_REQUEST_URL']
+            core.setOutput('TOKEN', token.trim())
+            core.setOutput('URL', url.trim())
+
 
       # Fetch OIDC JWT manually
       - name: Fetch OIDC JWT
