@@ -44,17 +44,17 @@ jobs:
           aws sts get-caller-identity
 
 
-      - name: ⚙️ Terraform Init
-        run: |
-           terraform init
+ #     - name: ⚙️ Terraform Init
+ #      run: |
+ #         terraform init
         
 
-      - name: 📊 Terraform Plan
-        run: terraform plan -input=false -out=tfplan
+#      - name: 📊 Terraform Plan
+#        run: terraform plan -input=false -out=tfplan
 
-      - name: 🚀 Terraform Apply (main branch only)
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve
+#      - name: 🚀 Terraform Apply (main branch only)
+#       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#       run: terraform apply -auto-approve
         
 
 #      - name: 💣 Terraform Destroy (manual trigger)
