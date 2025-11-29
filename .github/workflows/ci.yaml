@@ -1,7 +1,15 @@
 name: Terraform Kubernetes Provisioner
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
+    inputs:
+      destroy:
+        description: 'Set to true to destroy resources'
+        required: true
+        default: 'false'
 
 permissions:
   id-token: write   # Required for OIDC
@@ -13,6 +21,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: 🧰 Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.0
+
+       # Install AWS CLI v2. 
+      - name: Install AWS CLI
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install --update
+          aws --version
+          aws sts get-caller-identity
 
       # Fetch OIDC JWT with correct audience and extract value
       - name: Fetch OIDC JWT
