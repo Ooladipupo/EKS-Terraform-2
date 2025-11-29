@@ -53,6 +53,7 @@ jobs:
         run: |
           curl -sSL -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
             "${ACTIONS_ID_TOKEN_REQUEST_URL}?audience=sts.amazonaws.com" \
+            | jq -r '.value'
             > /tmp/id-token.json
           echo "OIDC_JWT=$(jq -r '.value' /tmp/id-token.json)" >> $GITHUB_ENV
           echo $OIDC_JWT | cut -d. -f2 | base64 -d | jq .
