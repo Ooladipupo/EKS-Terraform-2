@@ -78,14 +78,14 @@ resource "aws_eks_access_entry" "admin" {
 
 resource "aws_eks_access_entry" "github_oidc" {
   cluster_name = aws_eks_cluster.devopsshack.name
-  principal_arn = aws_iam_role.Github-action.arn
+  principal_arn = "arn:aws:iam::457082365292:role/Github-action"
   user_name         = "Github-action"
   type = "STANDARD"
 }
 
 resource "aws_eks_access_policy_association" "example" {
   cluster_name  = aws_eks_cluster.devopsshack.name
-  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSAdminPolicy"
-  principal_arn = aws_iam_role.Github-action.arn
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+  principal_arn = "arn:aws:iam::457082365292:role/Github-action"
 }
 
