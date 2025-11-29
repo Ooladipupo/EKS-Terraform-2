@@ -35,7 +35,7 @@ jobs:
           unzip awscliv2.zip
           sudo ./aws/install --update
           aws --version
-          aws sts get-caller-identity
+          
           
         #Running a manual script to generate the GitHub OIDC JWT token
       - uses: actions/github-script@v8
@@ -46,8 +46,9 @@ jobs:
             const token = process.env['ACTIONS_ID_TOKEN_REQUEST_TOKEN']
             const runtimeUrl = process.env['ACTIONS_ID_TOKEN_REQUEST_URL']
             core.setOutput('TOKEN', token.trim())
-            
             core.setOutput('IDTOKENURL', runtimeUrl.trim())
+
+            
 
         #calling the token endpoint. You can optionally set an audience (required by some providers, like AWS).
       - name: Fetch OIDC ID token (JWT)
@@ -58,11 +59,12 @@ jobs:
             > /tmp/id-token.json  
             # Extract the actual JWT (id_token) into an environment file
           echo "OIDC_JWT=$(jq -r '.value' /tmp/id-token.json)" >> $GITHUB_ENV
+          
 
       - name: Exchange JWT for AWS credentials
         run: |
           aws sts assume-role-with-web-identity \
-            --role-arn arn:aws:iam::123456789012:role/GitHubOIDCRole \
+            --role-arn arn:aws:iam::457082365292:role/Github-action \
             --role-session-name gh-actions-oidc \
             --web-identity-token "$OIDC_JWT" \
             --duration-seconds 3600 > /tmp/aws-creds.json
@@ -70,6 +72,7 @@ jobs:
           echo "AWS_ACCESS_KEY_ID=$(jq -r '.Credentials.AccessKeyId' /tmp/aws-creds.json)" >> $GITHUB_ENV
           echo "AWS_SECRET_ACCESS_KEY=$(jq -r '.Credentials.SecretAccessKey' /tmp/aws-creds.json)" >> $GITHUB_ENV
           echo "AWS_SESSION_TOKEN=$(jq -r '.Credentials.SessionToken' /tmp/aws-creds.json)" >> $GITHUB_ENV
+          aws sts get-caller-identity
 
       - name: ⚙️ Terraform Init
         run: |
@@ -79,9 +82,9 @@ jobs:
       - name: 📊 Terraform Plan
         run: terraform plan -input=false -out=tfplan
 
-#      - name: 🚀 Terraform Apply (main branch only)
-#        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-#       run: terraform apply -auto-approve
+  #    - name: 🚀 Terraform Apply (main branch only)
+  #     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #     run: terraform apply -auto-approve
         
 
 #      - name: 💣 Terraform Destroy (manual trigger)
