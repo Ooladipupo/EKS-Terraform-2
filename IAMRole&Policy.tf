@@ -90,7 +90,7 @@ resource "aws_eks_access_policy_association" "example" {
 
   access_scope {
     type       = "cluster"
-    namespaces = ["online-boutique"]
+    namespaces = []
   }
 }
 
