@@ -29,19 +29,6 @@ jobs:
          role-to-assume: arn:aws:iam::457082365292:role/githuoidc
          aws-region: eu-west-2
 
-      - name: 🧰 Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.6.0
-
-       # Install AWS CLI v2. 
-      - name: Install AWS CLI
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install --update
-          aws --version
-          aws sts get-caller-identity
 
 
  #     - name: ⚙️ Terraform Init
