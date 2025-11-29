@@ -1,0 +1,89 @@
+name: Terraform AWS Provisioning
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      destroy:
+        description: 'Set to true to destroy resources'
+        required: true
+        default: 'false'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  create-cluster:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🧰 Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.0
+
+       # Install AWS CLI v2. 
+      - name: Install AWS CLI
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install --update
+          aws --version
+          aws sts get-caller-identity
+          
+        #Running a manual script to generate the GitHub OIDC JWT token
+      - uses: actions/github-script@v8
+        id: script
+        with:
+          debug: true
+          script: |
+            const token = process.env['ACTIONS_ID_TOKEN_REQUEST_TOKEN']
+            const runtimeUrl = process.env['ACTIONS_ID_TOKEN_REQUEST_URL']
+            core.setOutput('TOKEN', token.trim())
+            
+            core.setOutput('IDTOKENURL', runtimeUrl.trim())
+
+        #calling the token endpoint. You can optionally set an audience (required by some providers, like AWS).
+      - name: Fetch OIDC ID token (JWT)
+        id: oidc
+        run: |
+          curl -sSL -H "Authorization: Bearer ${{ steps.script.outputs.TOKEN }}" \
+            "${{ steps.script.outputs.IDTOKENURL }}?audience=sts.amazonaws.com" \
+            > /tmp/id-token.json  
+            # Extract the actual JWT (id_token) into an environment file
+          echo "OIDC_JWT=$(jq -r '.value' /tmp/id-token.json)" >> $GITHUB_ENV
+
+      - name: Exchange JWT for AWS credentials
+        run: |
+          aws sts assume-role-with-web-identity \
+            --role-arn arn:aws:iam::123456789012:role/GitHubOIDCRole \
+            --role-session-name gh-actions-oidc \
+            --web-identity-token "$OIDC_JWT" \
+            --duration-seconds 3600 > /tmp/aws-creds.json
+
+          echo "AWS_ACCESS_KEY_ID=$(jq -r '.Credentials.AccessKeyId' /tmp/aws-creds.json)" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=$(jq -r '.Credentials.SecretAccessKey' /tmp/aws-creds.json)" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=$(jq -r '.Credentials.SessionToken' /tmp/aws-creds.json)" >> $GITHUB_ENV
+
+      - name: ⚙️ Terraform Init
+        run: |
+           terraform init
+        
+
+      - name: 📊 Terraform Plan
+        run: terraform plan -input=false -out=tfplan
+
+#      - name: 🚀 Terraform Apply (main branch only)
+#        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#       run: terraform apply -auto-approve
+        
+
+#      - name: 💣 Terraform Destroy (manual trigger)
+#        if: github.event_name == 'workflow_dispatch' && github.event.inputs.destroy == 'true'
+#        run: terraform destroy -auto-approve
