@@ -43,6 +43,7 @@ jobs:
             "${ACTIONS_ID_TOKEN_REQUEST_URL}?audience=sts.amazonaws.com" \
             > /tmp/id-token.json
           echo "OIDC_JWT=$(jq -r '.value' /tmp/id-token.json)" >> $GITHUB_ENV
+          echo $OIDC_JWT | cut -d. -f2 | base64 -d | jq .
 
       # Exchange JWT for AWS credentials
       - name: Assume AWS Role
