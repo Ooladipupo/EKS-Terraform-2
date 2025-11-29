@@ -36,6 +36,17 @@ jobs:
 #          aws --version
 #          aws sts get-caller-identity
 
+      - uses: actions/github-script@v8
+        id: script
+        timeout-minutes: 10
+        with:
+          debug: true
+          script: |
+            const token = process.env['ACTIONS_ID_TOKEN_REQUEST_TOKEN']
+            const runtimeUrl = process.env['ACTIONS_ID_TOKEN_REQUEST_URL']
+            core.setOutput('TOKEN', token.trim())
+            core.setOutput('IDTOKENURL', runtimeUrl.trim())
+
       # Fetch OIDC JWT with correct audience and extract value
       - name: Fetch OIDC JWT
         id: jwt
