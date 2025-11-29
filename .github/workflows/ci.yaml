@@ -1,4 +1,4 @@
-name: Terraform AWS Provisioning
+name: Terraform kubernetes Provisioning
 
 on:
   push:
