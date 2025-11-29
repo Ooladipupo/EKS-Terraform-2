@@ -1,53 +1,19 @@
-name: Terraform kubernetes Provisioning
+name: Terraform Kubernetes Provisioner
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
-    inputs:
-      destroy:
-        description: 'Set to true to destroy resources'
-        required: true
-        default: 'false'
-
 
 permissions:
-  id-token: write
-  contents: read
+  id-token: write   # Required for OIDC
+  contents: read    # Required for checkout
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: 🧰 Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.6.0
-
-       # Install AWS CLI v2. 
-      - name: Install AWS CLI
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install --update
-          aws --version
-          
-
-        # Get OIDC request token + URL
-      - uses: actions/github-script@v8
-        id: oidc
-        with:
-          script: |
-            const token = process.env['ACTIONS_ID_TOKEN_REQUEST_TOKEN']
-            const url = process.env['ACTIONS_ID_TOKEN_REQUEST_URL']
-            core.setOutput('TOKEN', token.trim())
-            core.setOutput('URL', url.trim())
-
-
-      # Fetch OIDC JWT manually
       # Fetch OIDC JWT with correct audience and extract value
       - name: Fetch OIDC JWT
         id: jwt
@@ -57,7 +23,6 @@ jobs:
             | jq -r '.value')
 
           echo "OIDC_JWT=$OIDC_JWT" >> $GITHUB_ENV
-
 
       # Exchange JWT for AWS credentials
       - name: Assume AWS Role
@@ -71,16 +36,17 @@ jobs:
           echo "AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')" >> $GITHUB_ENV
           echo "AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')" >> $GITHUB_ENV
           echo "AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')" >> $GITHUB_ENV
-          echo $OIDC_JWT | cut -d. -f2 | base64 -d | jq .
 
       # Run Terraform
-      - name: ⚙️ Terraform Init
-        run: |
-           terraform init
+      - name: Terraform Init
+        run: terraform init
+
+
+
         
 
-      - name: 📊 Terraform Plan
-        run: terraform plan -input=false -out=tfplan
+   #   - name: 📊 Terraform Plan
+    #    run: terraform plan -input=false -out=tfplan
 
 
 
