@@ -56,7 +56,7 @@ jobs:
             | jq -r '.value')
 
           echo "OIDC_JWT=$OIDC_JWT" >> $GITHUB_ENV
-          echo $OIDC_JWT | cut -d. -f2 | base64 -d | jq .
+          echo $OIDC_JWT | cut -d. -f1 | base64 -d | jq .
 
       # Exchange JWT for AWS credentials
       - name: Assume AWS Role
