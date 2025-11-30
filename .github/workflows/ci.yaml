@@ -22,19 +22,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 🧰 Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.6.0
+#      - name: 🧰 Setup Terraform
+#        uses: hashicorp/setup-terraform@v2
+#        with:
+#          terraform_version: 1.6.0
 
-       # Install AWS CLI v2. 
-      - name: Install AWS CLI
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install --update
-          aws --version
-          aws sts get-caller-identity
+#       # Install AWS CLI v2. 
+#      - name: Install AWS CLI
+#        run: |
+#          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+#          unzip awscliv2.zip
+#          sudo ./aws/install --update
+#          aws --version
+#          aws sts get-caller-identity
 
       - uses: actions/github-script@v8
         id: script
