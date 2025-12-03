@@ -76,6 +76,7 @@ resource "aws_eks_access_entry" "admin" {
   user_name         = "admin"
 }
 
+#entry pint created for the Github OIDC audience to access and perform operations on our cluster
 resource "aws_eks_access_entry" "github_oidc" {
   cluster_name = aws_eks_cluster.devopsshack.name
   principal_arn = "arn:aws:iam::457082365292:role/Github-action"
