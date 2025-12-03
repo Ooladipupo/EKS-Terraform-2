@@ -1,4 +1,4 @@
-name: Terraform AWS Provisioning
+vim -r .github/workflows/cd.yamlname: Terraform AWS Provisioning
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       destroy:
         description: 'Set to true to destroy resources'
         required: true
-        default: 'false'
+        default: 'true'
 
 permissions:
   id-token: write
@@ -53,11 +53,31 @@ jobs:
 #      - name: 📊 Terraform Plan
 #        run: terraform plan -input=false -out=tfplan
 
+
 #      - name: 🚀 Terraform Apply (main branch only)
 #       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 #       run: terraform apply -auto-approve
+
+      - name: 🚀 Terraform Apply (main branch only)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve tfplan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
 
-#      - name: 💣 Terraform Destroy (manual trigger)
-#        if: github.event_name == 'workflow_dispatch' && github.event.inputs.destroy == 'true'
-#        run: terraform destroy -auto-approve
+      - name: 💣 Terraform Destroy (manual trigger)
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.destroy == 'true'
+        run: terraform destroy -auto-approve
